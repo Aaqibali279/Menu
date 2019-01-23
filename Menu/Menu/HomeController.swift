@@ -20,43 +20,81 @@ import UIKit
 
 class HomeController: UIViewController {
 
-    var delegate: MenuDelegate?
+    var transformLayer = CATransformLayer()
+    var currentAngle:CGFloat = 0
+    var currentOffset:CGFloat = 0
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .primaryColor
-
         
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .clear
-        tableView.separatorStyle = .singleLine
+        transformLayer.frame = view.bounds
+        view.layer.addSublayer(transformLayer)
         
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor,constant:20).isActive = true
-        
-    }
-}
-    extension HomeController: UITableViewDelegate, UITableViewDataSource {
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 15
-        }
-        
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = UITableViewCell(style: .default, reuseIdentifier: "")
-            cell.textLabel?.textColor = .white
-            cell.contentView.backgroundColor = .primaryColor
-            cell.textLabel?.text = "Section: \(indexPath.section),Row: \(indexPath.row)"
-            return cell
-        }
-        
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        [#imageLiteral(resourceName: "a"),#imageLiteral(resourceName: "b"),#imageLiteral(resourceName: "c"),#imageLiteral(resourceName: "d")].forEach { (image) in
             
         }
+        addImageCard(image: #imageLiteral(resourceName: "a"))
+//        turn()
+        let gesture  = UIPanGestureRecognizer(target: self, action: #selector(gesture(gesture:)))
+        view.addGestureRecognizer(gesture)
         
     }
+    
+    @objc
+    func gesture(gesture:UIPanGestureRecognizer){
+        let xOffset = gesture.translation(in: view).x
+
+        print(xOffset)
+        if gesture.state == .began{
+            currentOffset = 0
+        }
+
+        let xDiff = xOffset * 0.6 - currentOffset
+
+        currentOffset += xDiff
+        currentAngle += xDiff
+        
+        print(currentOffset,currentAngle)
+//        turn()
+        
+    }
+    
+    func addImageCard(image:UIImage){
+        let imageCardSize = view.bounds
+        
+        let imageLayer = CALayer()
+        imageLayer.frame = CGRect(x: view.frame.width/2 - imageCardSize.width/2, y: view.frame.height/2 - imageCardSize.height/2, width: imageCardSize.width, height: imageCardSize.height)
+        imageLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
+        imageLayer.contents = image.cgImage
+        imageLayer.contentsGravity = "resizeAspectFill"
+        imageLayer.masksToBounds = true
+        imageLayer.isDoubleSided = true
+        imageLayer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+        imageLayer.borderWidth = 5
+        imageLayer.cornerRadius = 10
+        
+        transformLayer.addSublayer(imageLayer)
+    }
+    
+    var transforms = [String:CATransform3D]()
+    
+    func turn(){
+        guard let subLayers = transformLayer.sublayers else { return }
+
+        let segment = CGFloat(360/subLayers.count)
+        var angleOffset = currentAngle
+        for layer in subLayers{
+            var transform = CATransform3DIdentity
+            transform.m34 = -(1/800)
+            transform = CATransform3DRotate(transform, Double(angleOffset).radians(), 0, 1, 0)
+            transform = CATransform3DTranslate(transform, 0, 0, 160)
+            
+            CATransaction.setAnimationDuration(0)
+            layer.transform = transform
+            angleOffset += segment
+        }
+    }
+}

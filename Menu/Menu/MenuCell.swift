@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuCell: UITableViewCell {
+class MenuCell: TableViewCell<Menu> {
     // MARK: - Properties
     
     let iconImageView: UIImageView = {
@@ -25,12 +25,13 @@ class MenuCell: UITableViewCell {
         return label
     }()
     
-    var menu:Menu?{
+    override var item:Menu?{
         didSet{
-            descriptionLabel.text = menu?.name
-            iconImageView.image = menu?.image
+            descriptionLabel.text = item?.name
+            iconImageView.image = item?.image
         }
     }
+
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

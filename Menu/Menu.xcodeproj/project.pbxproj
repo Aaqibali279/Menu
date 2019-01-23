@@ -18,6 +18,7 @@
 		10D4033C21F5DA2200D963E6 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4033B21F5DA2200D963E6 /* SettingsController.swift */; };
 		10D4033E21F5EB5400D963E6 /* NewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4033D21F5EB5400D963E6 /* NewController.swift */; };
 		10D4034021F5F41500D963E6 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10D4033F21F5F41500D963E6 /* Launch Screen.storyboard */; };
+		10D4034221F6DE6100D963E6 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D4034121F6DE6100D963E6 /* TableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		10D4033B21F5DA2200D963E6 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		10D4033D21F5EB5400D963E6 /* NewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewController.swift; sourceTree = "<group>"; };
 		10D4033F21F5F41500D963E6 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		10D4034121F6DE6100D963E6 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				10D4033B21F5DA2200D963E6 /* SettingsController.swift */,
 				10D4033D21F5EB5400D963E6 /* NewController.swift */,
 				10D4033F21F5F41500D963E6 /* Launch Screen.storyboard */,
+				10D4034121F6DE6100D963E6 /* TableView.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10D4033C21F5DA2200D963E6 /* SettingsController.swift in Sources */,
+				10D4034221F6DE6100D963E6 /* TableView.swift in Sources */,
 				10D4033E21F5EB5400D963E6 /* NewController.swift in Sources */,
 				10D4033621F5CAA900D963E6 /* MenuCell.swift in Sources */,
 				10D4033421F5BAD400D963E6 /* HomeController.swift in Sources */,

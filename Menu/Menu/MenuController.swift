@@ -18,13 +18,13 @@ class Menu {
     }
 }
 
+typealias CheckActionCodeCallback = (String,DidSelectRowAt<Menu>) -> Void
 
 
 import UIKit
 
 class MenuController: UIViewController {
 
-    var tableView: UITableView!
     var delegate: MenuDelegate?
     var menus = [Menu]()
     // MARK: - Init
@@ -40,14 +40,16 @@ class MenuController: UIViewController {
     // MARK: - Handlers
     
     func configureTableView() {
-        tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(MenuCell.self, forCellReuseIdentifier: "reuseIdentifer")
+        let tableView = TableView<Menu,MenuCell>()
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        tableView.rowHeight = 60
-        
+        tableView.heightForRow = 60
+        tableView.list = menus
+        tableView.didSelectRowAt = { (indexPath,menu) -> Void in
+            self.delegate?.selected(menu: menu)
+            guard let cell = tableView.cellForRow(at: indexPath) as? MenuCell else { return }
+            cell.setSelected(true, animated: false)
+        }
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -55,25 +57,5 @@ class MenuController: UIViewController {
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         tableView.topAnchor.constraint(equalTo: view.topAnchor,constant:20).isActive = true
     }
-}
-
-extension MenuController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menus.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifer", for: indexPath) as! MenuCell
-        cell.menu = menus[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let menu = menus[indexPath.row]
-        delegate?.selected(menu: menu)
-        guard let cell = tableView.cellForRow(at: indexPath) as? MenuCell else { return }
-        cell.setSelected(true, animated: false)
-    }
-    
 }
 

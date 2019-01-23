@@ -48,7 +48,7 @@ class ContainerController: UIViewController {
     func configureMenuController() {
         if menuController == nil {
             menuController = MenuController()
-            let items:[(UIImage,UIViewController,String)] = [(#imageLiteral(resourceName: "profile"),HomeController(),"Home"),(menuImage,NotificationsController(),"Notifications"),(#imageLiteral(resourceName: "settings"),SettingsController(),"Settings"),(#imageLiteral(resourceName: "mail"),ProfileController(),"Mail"),(backImage,NewController(),"Logout")]
+            let items:[(UIImage,UIViewController,String)] = [(#imageLiteral(resourceName: "profile"),ProfileController(),"Profile"),(menuImage,NotificationsController(),"Notifications"),(#imageLiteral(resourceName: "settings"),SettingsController(),"Settings"),(#imageLiteral(resourceName: "mail"),ProfileController(),"Mail"),(backImage,NewController(),"Logout")]
              let menus = items.map({ (image,vc,name) -> Menu in
                 return Menu(name: name, image: image, vc: vc)
             })
