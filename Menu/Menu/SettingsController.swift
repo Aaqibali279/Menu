@@ -11,31 +11,119 @@ import QuartzCore
 
 class SettingsController: UIViewController {
 
+    let container = CAShapeLayer()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor  = .primaryColor
-        
-        let container = CALayer()
-        container.frame = view.frame
-        view.layer.addSublayer(container)
-        
-        //Create a Plane
-        let purplePlane = CALayer()
-        purplePlane.frame = CGRect(x: 10, y: 50, width: 300, height: 500)
-        purplePlane.borderColor = UIColor.red.cgColor
-        purplePlane.backgroundColor = UIColor.blue.cgColor
-        
-        container.addSublayer(purplePlane)
-        
-        //Apply transform to the PLANE
-        var t = CATransform3DIdentity
-        t.m34 = -(1/100)
-        t = CATransform3DRotate(t, Double(45).radians(), 0, 1, 0)
-        purplePlane.transform = t
-        
-        
-        
+
+        addlayers()
+//        drawPolygon()
     }
+    
+    func addlayers(){
+        let colors = [UIColor.red,UIColor.blue,UIColor.brown,UIColor.cyan,UIColor.darkGray,UIColor.green]
+        let points = polygonPointArray(sides: colors.count, center: view.center, radius: 100, offset: 0)
+        let path = polygonPath(center: view.center, radius: 100, sides: colors.count, offset: 0)
+        container.path = path.cgPath
+        container.bounds = CGRect(x: view.frame.width/2 - 50, y: view.frame.height/2 - 50, width: 100, height: 100)
+        container.position = view.center
+        container.fillColor = UIColor.purple.cgColor
+        view.layer.addSublayer(container)
+        scale(layer: container, duration: 60)
+        for (index,color) in colors.enumerated(){
+            let layer = CAShapeLayer()
+            let path = polygonPath(center: points[index], radius: 33.33, sides: colors.count, offset: 0)
+            layer.path = path.cgPath
+            let point = points[index]
+            layer.bounds = CGRect(x: point.x - 33.33, y: point.y - 33.33, width: 66.66, height: 66.66)
+            layer.position = point
+            layer.fillColor = color.cgColor
+            layer.isDoubleSided = true
+            container.addSublayer(layer)
+            scale(layer: layer, duration: 20)
+        }
+    }
+
+    
+    
+    func scale(layer:CALayer,duration:Double){
+    
+        layer.shadowRadius = 5
+        layer.shadowOpacity = 1
+        layer.shadowOffset = CGSize(width: -1, height: -1)
+        
+        let animation = CAAnimationGroup()
+        let rotateAnim = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotateAnim.toValue = 60
+        rotateAnim.timingFunction = CAMediaTimingFunction.init(name: kCAMediaTimingFunctionLinear)
+
+        animation.animations = [rotateAnim]
+        animation.duration = duration
+        animation.repeatCount = .infinity
+        layer.add(animation, forKey: nil)
+
+    }
+    
+    
+    
+    var angle:Double = 0
+    
+    @objc
+    func rotate(){
+//        guard let subLayers = container.sublayers else {
+//            return
+//        }
+//        angle += Double(360/subLayers.count)
+//        let radians  = angle.radians()
+//        rotateLayer(angle: radians, layer: container)
+//
+//        for layer in subLayers{
+//            rotateLayer(angle: radians, layer: layer)
+//        }
+    }
+    
+    func rotateLayer(angle:CGFloat,layer:CALayer){
+        var transform = CATransform3DIdentity
+        transform = CATransform3DRotate(transform, angle, 0, 0, 1)
+        layer.transform = transform
+        CATransaction.setAnimationDuration(2)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction.init(name: kCAMediaTimingFunctionEaseInEaseOut))
+        CATransaction.setCompletionBlock {
+            
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let touch = touches.first
+//        let point = touch!.location(in: self.view)
+//        if (layer.path!.contains(point)) {
+//            print ("We tapped the square")
+//        }
+//
+//    }
+
     
 //    - (void)A_singlePlane{
 //
@@ -56,6 +144,16 @@ class SettingsController: UIViewController {
 //    purplePlane.transform = t;
 //    }
 
+    
+    func drawPolygon(){
+        let layer = CAShapeLayer()
+        let path = polygonPath(center: view.center, radius: 100, sides: 5, offset: 0  )
+        layer.strokeColor = UIColor.red.cgColor
+        layer.borderWidth = 10
+        layer.path = path.cgPath
+        view.layer.addSublayer(layer)
+    }
+    
     
     func polygonPointArray(sides:Int,center:CGPoint,radius:CGFloat,offset:CGFloat)->[CGPoint] {
         let angle:Double = (Double(360/sides))
@@ -82,9 +180,14 @@ class SettingsController: UIViewController {
         }
         return points
     }
-
+    /*
+     center is point where ploygons center lies
+     radius of the circle in which polygon lies or half of the diagonal
+     sides is the number of sides
+     offset is the value by which a polgon is rotated with respect to center
+     */
     
-    func polygonPath(center:CGPoint, radius:CGFloat, sides:Int, offset: CGFloat) -> CGPath {
+    func polygonPath(center:CGPoint, radius:CGFloat, sides:Int, offset:CGFloat) -> UIBezierPath {
         let path = CGMutablePath()
         let points = polygonPointArray(sides: sides,center: center,radius: radius, offset: offset)
         let cpg = points[0]
@@ -93,14 +196,8 @@ class SettingsController: UIViewController {
             path.addLine(to: CGPoint(x: p.x, y: p.y))
         }
         path.closeSubpath()
-        return path
-    }
-    
-    func drawPolygonBezier(center:CGPoint, radius:CGFloat, sides:Int, offset:CGFloat) -> UIBezierPath {
-        let path = polygonPath(center: center, radius: radius, sides: sides, offset: offset)
-        let bez = UIBezierPath(cgPath: path)
-        bez.fill()
-        return bez
+        let bezierPath = UIBezierPath(cgPath: path)
+        return bezierPath
     }
 
 }

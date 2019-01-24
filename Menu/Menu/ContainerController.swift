@@ -15,7 +15,7 @@ class ContainerController: UIViewController {
     var menuController: MenuController!
     var menuImage = #imageLiteral(resourceName: "menu").withRenderingMode(.alwaysTemplate)
     var backImage = #imageLiteral(resourceName: "back").withRenderingMode(.alwaysTemplate)
-    var isExpanded = true
+    var isOpen = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +30,17 @@ class ContainerController: UIViewController {
         nvc.view.layer.shadowOpacity = 0.6
         nvc.view.layer.shadowRadius = 5
         nvc.view.layer.shadowOffset = CGSize(width: -1, height: 1)
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(nvcViewAction))
+        nvc.view.addGestureRecognizer(gesture)
+    }
+    
+    @objc
+    func nvcViewAction(){
+        guard  isOpen else { return }
+        
+        animatePanel()
+        
     }
     
     
@@ -48,7 +59,7 @@ class ContainerController: UIViewController {
     func configureMenuController() {
         if menuController == nil {
             menuController = MenuController()
-            let items:[(UIImage,UIViewController,String)] = [(#imageLiteral(resourceName: "profile"),ProfileController(),"Profile"),(menuImage,NotificationsController(),"Notifications"),(#imageLiteral(resourceName: "settings"),SettingsController(),"Settings"),(#imageLiteral(resourceName: "mail"),ProfileController(),"Mail"),(backImage,NewController(),"Logout")]
+            let items:[(UIImage,UIViewController,String)] = [(#imageLiteral(resourceName: "mail"),HomeController(),"Home"),(menuImage,NotificationsController(),"Notifications"),(#imageLiteral(resourceName: "settings"),SettingsController(),"Settings"),(#imageLiteral(resourceName: "profile"),ProfileController(),"Profile"),(backImage,NewController(),"Logout")]
              let menus = items.map({ (image,vc,name) -> Menu in
                 return Menu(name: name, image: image, vc: vc)
             })
@@ -62,9 +73,9 @@ class ContainerController: UIViewController {
     
     func animatePanel() {
 
-        isExpanded = !isExpanded
+        isOpen = !isOpen
         let x = nvc.view.frame.width
-        let expanded = isExpanded
+        let expanded = isOpen
         
         UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseInOut, animations: {
             self.nvc.view.frame.origin.x = expanded ? x - 80 : 0

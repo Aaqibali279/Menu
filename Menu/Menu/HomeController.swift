@@ -25,6 +25,14 @@ class HomeController: UIViewController {
     var currentOffset:CGFloat = 0
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .primaryColor
@@ -33,18 +41,23 @@ class HomeController: UIViewController {
         view.layer.addSublayer(transformLayer)
         
         [#imageLiteral(resourceName: "a"),#imageLiteral(resourceName: "b"),#imageLiteral(resourceName: "c"),#imageLiteral(resourceName: "d")].forEach { (image) in
-            
+            addImageCard(image: image)
         }
-        addImageCard(image: #imageLiteral(resourceName: "a"))
-//        turn()
+        turn()
         let gesture  = UIPanGestureRecognizer(target: self, action: #selector(gesture(gesture:)))
         view.addGestureRecognizer(gesture)
+        
+        var transform = CATransform3DIdentity
+        transform = CATransform3DScale(transform, 0.75, 0.75, 0.75)
+        view.layer.sublayerTransform = transform
         
     }
     
     @objc
     func gesture(gesture:UIPanGestureRecognizer){
-        let xOffset = gesture.translation(in: view).x
+        let xOffset = gesture.velocity(in: view).x
+        
+        print(xOffset)
 
         print(xOffset)
         if gesture.state == .began{
@@ -55,9 +68,9 @@ class HomeController: UIViewController {
 
         currentOffset += xDiff
         currentAngle += xDiff
-        
+
         print(currentOffset,currentAngle)
-//        turn()
+        turn()
         
     }
     
@@ -77,9 +90,14 @@ class HomeController: UIViewController {
         imageLayer.cornerRadius = 10
         
         transformLayer.addSublayer(imageLayer)
+        
+        
+        
     }
     
     var transforms = [String:CATransform3D]()
+    
+    var angle = 0
     
     func turn(){
         guard let subLayers = transformLayer.sublayers else { return }
