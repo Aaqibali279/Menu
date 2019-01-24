@@ -2,7 +2,7 @@
 //  HomeController.swift
 //  Menu
 //
-//  Created by osx on 21/01/19.
+//  Created by Aqib Ali on 21/01/19.
 //  Copyright © 2019 osx. All rights reserved.
 //
 
@@ -55,10 +55,7 @@ class HomeController: UIViewController {
     
     @objc
     func gesture(gesture:UIPanGestureRecognizer){
-        let xOffset = gesture.velocity(in: view).x
-        
-        print(xOffset)
-
+        let xOffset = gesture.translation(in: view).x
         print(xOffset)
         if gesture.state == .began{
             currentOffset = 0
@@ -82,7 +79,7 @@ class HomeController: UIViewController {
         imageLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
         imageLayer.contents = image.cgImage
-        imageLayer.contentsGravity = "resizeAspectFill"
+        imageLayer.contentsGravity = kCAGravityResizeAspectFill
         imageLayer.masksToBounds = true
         imageLayer.isDoubleSided = true
         imageLayer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor

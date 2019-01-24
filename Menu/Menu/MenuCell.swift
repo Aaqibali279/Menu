@@ -2,7 +2,7 @@
 //  MenuOptionCellTableViewCell.swift
 //  Menu
 //
-//  Created by osx on 21/01/19.
+//  Created by Aqib Ali on 21/01/19.
 //  Copyright © 2019 osx. All rights reserved.
 //
 
